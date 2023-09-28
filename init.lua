@@ -338,3 +338,5 @@ cmp.setup.cmdline(":", {
 		{ name = "cmdline" },
 	}),
 })
+
+vim.cmd.cnoreabbrev([[git Git]])
