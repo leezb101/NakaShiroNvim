@@ -158,6 +158,14 @@ require("lazy").setup({
 		"tpope/vim-fugitive",
 		cmd = "Git",
 	},
+	-- git sign 标记
+	{
+		event = "VeryLazy",
+		"lewis6991/gitsigns.nvim",
+		config = function()
+			require("gitsigns").setup()
+		end,
+	},
 })
 
 -- colorscheme
