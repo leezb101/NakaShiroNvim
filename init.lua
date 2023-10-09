@@ -60,7 +60,10 @@ require("lazy").setup({
 	{
 		-- 持久化
 		"folke/persistence.nvim",
-		lazy = true,
+		event = "BufReadPre",
+		config = function()
+			require("persistence").setup()
+		end,
 	},
 	{
 		"folke/which-key.nvim",
@@ -227,7 +230,7 @@ highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
 		},
 		keys = {
 			{
-        id = 'treeToggle',
+				id = "treeToggle",
 				"<leader>t",
 				":NvimTreeToggle<CR>",
 				desc = "toggle nvimtree",
@@ -235,12 +238,6 @@ highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
 		},
 		config = function()
 			require("nvim-tree").setup({
-				offsets = {
-					filetype = "NvimTree",
-					text = "File Explorer",
-					highlight = "Directory",
-					text_align = "left",
-				},
 				filters = {
 					custom = {
 						".git/",
