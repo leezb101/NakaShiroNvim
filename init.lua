@@ -227,6 +227,7 @@ highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
 		},
 		keys = {
 			{
+        id = 'treeToggle',
 				"<leader>t",
 				":NvimTreeToggle<CR>",
 				desc = "toggle nvimtree",
