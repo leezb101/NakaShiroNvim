@@ -225,8 +225,34 @@ highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
 		dependencies = {
 			"nvim-tree/nvim-web-devicons",
 		},
+		keys = {
+			{
+				"<leader>t",
+				":NvimTreeToggle<CR>",
+				desc = "toggle nvimtree",
+			},
+		},
 		config = function()
-			require("nvim-tree").setup({})
+			require("nvim-tree").setup({
+				offsets = {
+					filetype = "NvimTree",
+					text = "File Explorer",
+					highlight = "Directory",
+					text_align = "left",
+				},
+				filters = {
+					custom = {
+						".git/",
+					},
+					exclude = {
+						".gitignore",
+					},
+					dotfiles = true,
+				},
+				git = {
+					enable = true,
+				},
+			})
 		end,
 	},
 })
