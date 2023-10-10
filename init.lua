@@ -198,15 +198,15 @@ require("lazy").setup({
 					additional_vim_regex_highlighting = false,
 				},
 				-- 启用增量选择
-				-- incremental_selection = {
-				--	enable = true,
-				--	keymaps = {
-				--		init_selection = "<CR>",
-				--		node_incremental = "<CR>",
-				--		node_decremental = "<BS>",
-				--		scope_incremental = "<TAB>",
-				--	},
-				--},
+				incremental_selection = {
+					enable = true,
+					keymaps = {
+						init_selection = "<CR>",
+						node_incremental = "<CR>",
+						node_decremental = "<BS>",
+						scope_incremental = "<TAB>",
+					},
+				},
 				indent = {
 					enable = true,
 				},
@@ -236,14 +236,14 @@ require("lazy").setup({
 		"rhysd/conflict-marker.vim",
 		config = function()
 			vim.cmd([[
-let g:conflict_marker_highlight_group = ''
-let g:conflict_marker_begin = '^<<<<<<< .*$'
-let g:conflict_marker_end   = '^>>>>>>> .*$'
-highlight ConflictMarkerBegin guibg=#2f7366
-highlight ConflictMarkerOurs guibg=#2e5049
-highlight ConflictMarkerTheirs guibg=#344f69
-highlight ConflictMarkerEnd guibg=#2f628e
-highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
+      let g:conflict_marker_highlight_group = ''
+      let g:conflict_marker_begin = '^<<<<<<< .*$'
+      let g:conflict_marker_end   = '^>>>>>>> .*$'
+      highlight ConflictMarkerBegin guibg=#2f7366
+      highlight ConflictMarkerOurs guibg=#2e5049
+      highlight ConflictMarkerTheirs guibg=#344f69
+      highlight ConflictMarkerEnd guibg=#2f628e
+      highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
       ]])
 		end,
 	},
@@ -365,6 +365,33 @@ highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
 		lazy = false,
 		version = "*",
 		"arkav/lualine-lsp-progress",
+	},
+	{
+		"folke/flash.nvim",
+		event = "VeryLazy",
+		---@type Flash.config
+		opts = {},
+    -- stylua: ignore
+    keys = {
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end,       desc = "Flash" },
+      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+      { "r", mode = "o",               function() require("flash").remote() end,     desc = "Remote Flash" },
+      {
+        "R",
+        mode = { "o", "x" },
+        function() require("flash").treesitter_search() end,
+        desc =
+        "Treesitter Search"
+      },
+      {
+        "<c-s>",
+        mode = { "c" },
+        function() require("flash").toggle() end,
+        desc =
+        "Toggle Flash Search"
+      },
+    }
+,
 	},
 })
 
