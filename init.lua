@@ -97,10 +97,10 @@ require("lazy").setup({
 		tag = "0.1.3",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		keys = {
-			{ "<leader>p", ":Telescope find_files<CR>", desc = "Telescope Find Files" },
-			{ "<leader>P", ":Telescope live_grep<CR>", desc = "Telescope Live Grep" },
-			{ "<leader>rs", ":Telescope resume<CR>", desc = "Telescope resume" },
-			{ "<leader>hf", ":Telescope oldfiles<CR>", desc = "Telescope Oldfiles" },
+			{ id = "telescopeFind", "<leader>p", ":Telescope find_files<CR>", desc = "Telescope Find Files" },
+			{ id = "telescopeLive", "<leader>P", ":Telescope live_grep<CR>", desc = "Telescope Live Grep" },
+			{ id = "telescopeResume", "<leader>rs", ":Telescope resume<CR>", desc = "Telescope resume" },
+			{ id = "telescopeHistory", "<leader>hf", ":Telescope oldfiles<CR>", desc = "Telescope Oldfiles" },
 		},
 	},
 	{
@@ -191,7 +191,7 @@ require("lazy").setup({
 	{
 		"nvim-treesitter/nvim-treesitter",
 		config = function()
-			require("nvim-treesitter").setup({
+			require("nvim-treesitter.configs").setup({
 				ensure_installed = { "html", "css", "vim", "lua", "javascript", "typescript", "vue", "tsx" },
 				highlight = {
 					enable = true,
@@ -546,12 +546,12 @@ cmp.setup.filetype("gitcommit", {
 })
 
 -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-cmp.setup.cmdline({ "/", "?" }, {
-	mapping = cmp.mapping.preset.cmdline(),
-	sources = {
-		{ name = "buffer" },
-	},
-})
+-- cmp.setup.cmdline({ "/", "?" }, {
+--	mapping = cmp.mapping.preset.cmdline(),
+--	sources = {
+--		{ name = "buffer" },
+--	},
+-- })
 
 -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
 cmp.setup.cmdline(":", {
