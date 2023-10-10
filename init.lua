@@ -15,6 +15,8 @@ set.softtabstop = 2
 set.shiftwidth = 2
 set.expandtab = true
 
+vim.opt.termguicolors = true
+
 -- copy后高亮
 vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
@@ -186,6 +188,31 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{
+		"nvim-treesitter/nvim-treesitter",
+		config = function()
+			require("nvim-treesitter").setup({
+				ensure_installed = { "html", "css", "vim", "lua", "javascript", "typescript", "vue", "tsx" },
+				highlight = {
+					enable = true,
+					additional_vim_regex_highlighting = false,
+				},
+				-- 启用增量选择
+				-- incremental_selection = {
+				--	enable = true,
+				--	keymaps = {
+				--		init_selection = "<CR>",
+				--		node_incremental = "<CR>",
+				--		node_decremental = "<BS>",
+				--		scope_incremental = "<TAB>",
+				--	},
+				--},
+				indent = {
+					enable = true,
+				},
+			})
+		end,
+	},
 	-- git
 	{
 		event = "VeryLazy",
@@ -226,7 +253,7 @@ highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
 		version = "*",
 		lazy = false,
 		dependencies = {
-			"nvim-tree/nvim-web-devicons",
+			"kyazdani42/nvim-web-devicons",
 		},
 		keys = {
 			{
@@ -252,6 +279,92 @@ highlight ConflictMarkerCommonAncestorsHunk guibg=#754a81
 				},
 			})
 		end,
+	},
+	{
+		"akinsho/bufferline.nvim",
+		lazy = false,
+		version = "*",
+		dependencies = "kyazdani42/nvim-web-devicons",
+		keys = {
+			{ "<leader>bp", ":BufferLinePickClose<CR>", desc = "Bufferline pick close tab" },
+			{ "<leader>bl", ":BufferLineCloseLeft<CR>", desc = "Bufferline close left tab" },
+			{ "<leader>br", ":BufferLineCloseRight<CR>", desc = "Bufferline close right tab" },
+			{ "<leader>bo", ":BufferLineCloseOthers<CR>", desc = "Bufferline close others tab" },
+			{ "<leader>bc", ":bdelete %<CR>", desc = "Bufferline close current tab" },
+		},
+		config = function()
+			require("bufferline").setup({
+				options = {
+					diagnostics = "nvim_lsp",
+					offsets = {
+						{
+							filetype = "NvimTree",
+							text = "File Explorer",
+							highlight = "Directory",
+							text_align = "left",
+						},
+					},
+					diagnostics_indicator = function(count, level, diagnostics_dict, context)
+						local s = " "
+						for e, n in pairs(diagnostics_dict) do
+							local sym = e == "error" and " " or (e == "warning" and " " or "")
+							s = s .. n .. sym
+						end
+						return s
+					end,
+				},
+			})
+		end,
+	},
+	{
+		lazy = false,
+		version = "*",
+		"nvim-lualine/lualine.nvim",
+		dependencies = {
+			"kyazdani42/nvim-web-devicons",
+		},
+		config = function()
+			require("lualine").setup({
+				options = {
+					component_separators = { left = "|", right = "|" },
+					-- https://github.com/ryanoasis/powerline-extra-symbols
+					section_separators = { left = " ", right = "" },
+				},
+				extensions = { "nvim-tree" },
+				sections = {
+					lualine_c = {
+						"filename",
+						{
+							"lsp_progress",
+							spinner_symbols = { " ", " ", " ", " ", " ", " " },
+						},
+					},
+					lualine_x = {
+						"filesize",
+						{
+							"fileformat",
+							-- symbols = {
+							--   unix = '', -- e712
+							--   dos = '', -- e70f
+							--   mac = '', -- e711
+							-- },
+							symbols = {
+								unix = "LF",
+								dos = "CRLF",
+								mac = "CR",
+							},
+						},
+						"encoding",
+						"filetype",
+					},
+				},
+			})
+		end,
+	},
+	{
+		lazy = false,
+		version = "*",
+		"arkav/lualine-lsp-progress",
 	},
 })
 
