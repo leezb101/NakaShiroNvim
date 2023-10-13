@@ -156,7 +156,7 @@ require("lazy").setup({
 			"L3MON4D3/LuaSnip",
 		},
 	},
-		-- 补全&诊断等
+	-- 补全&诊断等
 	{
 		event = "VeryLazy",
 		"jose-elias-alvarez/null-ls.nvim",
@@ -426,6 +426,13 @@ require("lazy").setup({
 		lazy = false,
 		config = function()
 			require("Comment").setup()
+		end,
+	},
+	{
+		"barrett-ruth/live-server.nvim",
+		build = "npm install -g live-server",
+		config = function()
+			require("live-server").setup()
 		end,
 	},
 })
