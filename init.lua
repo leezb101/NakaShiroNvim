@@ -14,7 +14,13 @@ set.tabstop = 2
 set.softtabstop = 2
 set.shiftwidth = 2
 set.expandtab = true
+set.smartindent = true
+-- 查找忽略大小写
+set.ignorecase = true
 
+vim.g.copilot_assume_mapped = true
+vim.g.copilot_no_tab_map = true
+vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
 vim.opt.termguicolors = true
 -- copy后高亮
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -27,14 +33,18 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 local opt = { noremap = true, silent = true }
 vim.g.mapleader = " "
 vim.g.localmapleader = " "
-vim.keymap.set("n", "<C-l>", "<C-w>l", opt)
-vim.keymap.set("n", "<C-h>", "<C-w>h", opt)
-vim.keymap.set("n", "<C-j>", "<C-w>j", opt)
-vim.keymap.set("n", "<C-k>", "<C-w>k", opt)
+vim.keymap.set("n", "<leader>ml", "<C-w>l", opt)
+vim.keymap.set("n", "<leader>mh", "<C-w>h", opt)
+vim.keymap.set("n", "<leader>mj", "<C-w>j", opt)
+vim.keymap.set("n", "<leader>mk", "<C-w>k", opt)
 vim.keymap.set("n", "<leader>v", "<C-w>v", opt)
 vim.keymap.set("n", "<leader>s", "<C-w>s", opt)
 vim.keymap.set("n", "<leader>w", ":w<CR>", opt)
+vim.keymap.set("n", "q", ":q<CR>", opt)
+vim.keymap.set("n", "qq", ":q!<CR>", opt)
+vim.keymap.set("n", "Q", ":qa!<CR>", opt)
 vim.keymap.set("i", "jk", "<Esc>", opt)
+
 -- 判断是否有count在jk跳转前，决定是否跳转可视行和物理行
 vim.keymap.set("n", "j", [[v:count ? 'j' : 'gj']], { noremap = true, expr = true })
 vim.keymap.set("n", "k", [[v:count ? 'k' : 'gk']], { noremap = true, expr = true })
@@ -56,6 +66,15 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
+	{
+		"folke/tokyonight.nvim",
+		event = "VeryLazy",
+		config = function()
+			vim.g.tokyonight_style = "storm"
+			vim.g.tokyonight_sidebars = { "NvimTree" }
+			vim.cmd([[colorscheme tokyonight]])
+		end,
+	},
 	{
 		"RRethy/nvim-base16",
 		lazy = true,
@@ -137,7 +156,7 @@ require("lazy").setup({
 			"L3MON4D3/LuaSnip",
 		},
 	},
-	-- 补全&诊断等
+		-- 补全&诊断等
 	{
 		event = "VeryLazy",
 		"jose-elias-alvarez/null-ls.nvim",
@@ -179,13 +198,13 @@ require("lazy").setup({
 							-- format({ bufnr = bufnr, async = true })
 						end, { buffer = bufnr, desc = "[lsp] format" })
 						vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-						vim.api.nvim_create_autocmd("BufWritePre", {
+						vim.api.nvim_create_autocmd("BufWritePost", {
 							group = augroup,
 							buffer = bufnr,
 							callback = function()
 								-- on 0.8, you should use vim.lsp.buf.format({ bufnr = bufnr }) instead
 								-- on later neovim version, you should use vim.lsp.buf.format({ async = false }) instead
-								vim.lsp.buf.format({ bufnr = bufnr, async = true })
+								vim.lsp.buf.format({ bufnr = bufnr, async = false })
 							end,
 						})
 					end
@@ -295,7 +314,10 @@ require("lazy").setup({
 			{ "<leader>bl", ":BufferLineCloseLeft<CR>", desc = "Bufferline close left tab" },
 			{ "<leader>br", ":BufferLineCloseRight<CR>", desc = "Bufferline close right tab" },
 			{ "<leader>bo", ":BufferLineCloseOthers<CR>", desc = "Bufferline close others tab" },
-			{ "<leader>bc", ":bdelete %<CR>", desc = "Bufferline close current tab" },
+			{ "<leader>bc", ":BufferLineCloseCurrent<CR>", desc = "Bufferline close others tab" },
+			{ "<C-h>", ":BufferLineCyclePrev<CR>", desc = "Bufferline cycle prev tab" },
+			{ "<C-l>", ":BufferLineCycleNext<CR>", desc = "Bufferline cycle next tab" },
+			{ "<leader>x", ":bdelete %<CR>", desc = "Bufferline close current tab" },
 		},
 		config = function()
 			require("bufferline").setup({
@@ -378,7 +400,7 @@ require("lazy").setup({
 		opts = {},
     -- stylua: ignore
     keys = {
-      { "f", mode = { "n", "x", "o" }, function() require("flash").jump() end,       desc = "Flash" },
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end,       desc = "Flash" },
       { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
       { "r", mode = "o",               function() require("flash").remote() end,     desc = "Remote Flash" },
       {
@@ -397,6 +419,14 @@ require("lazy").setup({
       },
     }
 ,
+	},
+	{
+		"numToStr/Comment.nvim",
+		opts = {},
+		lazy = false,
+		config = function()
+			require("Comment").setup()
+		end,
 	},
 })
 
@@ -535,7 +565,7 @@ cmp.setup({
 		-- { name = 'vsnip' }, -- For vsnip users.
 		{ name = "luasnip" }, -- For luasnip users.
 		-- { name = 'ultisnips' }, -- For ultisnips users.
-		-- { name = 'snippy' }, -- For snippy users.
+		-- { name = "snippy" }, -- For snippy users.
 	}, {
 		{ name = "buffer" },
 	}),
@@ -684,3 +714,5 @@ lspconfig_configs.volar_html = {
 lspconfig.volar_html.setup({})
 
 lspconfig.tsserver.setup({})
+lspconfig.html.setup({})
+lspconfig.cssls.setup({})
