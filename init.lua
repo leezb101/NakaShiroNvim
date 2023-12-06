@@ -320,7 +320,7 @@ require("lazy").setup({
 					exclude = {
 						".gitignore",
 					},
-					dotfiles = true,
+					dotfiles = false,
 				},
 				git = {
 					enable = true,
